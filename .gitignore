@@ -1,0 +1,21 @@
+# большие данные — не для гита
+*.vcf
+*.vcf.gz
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Django
+db.sqlite3
+*.log
+/staticfiles/
+/media/
+
+# редактор / ОС
+.vscode/
+.idea/
+.DS_Store
