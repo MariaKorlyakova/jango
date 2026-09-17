@@ -1,8 +1,15 @@
 from django import forms
-from .models import Genotype
+from django.core.exceptions import ValidationError
 
-class GenotypeRequestForm(forms.ModelForm):
-
-    class Meta:
-        model = Genotype
-        fields = ('CHROM', 'POS', 'UID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', 'HG001',)
+class GenotypeRequestForm(forms.Form):
+    chrom = forms.CharField(label="Input chromosome number, example: chr1", max_length=50)
+    start = forms.IntegerField(label="Input start position", min_value=1)
+    end = forms.IntegerField(label="Input end position", min_value=1)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        start = cleaned_data.get("start")
+        end = cleaned_data.get("end")
+        if start and end:
+            if end < start:
+                raise ValidationError("Start coordinate should be smaller or equal to end")

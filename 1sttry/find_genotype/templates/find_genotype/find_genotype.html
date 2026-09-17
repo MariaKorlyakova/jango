@@ -6,13 +6,51 @@
         <div>
             <h1><a href="/">Genotypes</a></h1>
         </div>
-            {% for genotype in genotypes %}
-                {{ genotype }}
-            {% endfor %}
-        <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My second post</a></h2>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut f.</p>
-        </div>
+        <form method="get">
+            {{ form }}
+            <button type="submit">Search</button>
+        </form>
+        {% if genotypes is not None %}
+            <table>
+                <tr>
+                    <th> chrom </th>
+                    <th> pos </th>
+                    <th> uid </th>
+                    <th> ref </th>
+                    <th> alt </th>
+                    <th> qual </th>
+                    <th> filter </th>
+                    <th> info </th>
+                    <th> gt </th>
+                    <th> phase_set </th>
+                    <th> depth </th>
+                    <th> allel_depth_all </th>
+                    <th> allel_depth_nofilt </th>
+                    <th> genotype_quality </th>
+                </tr>
+                {% for genotype in genotypes %}
+                    <tr>
+                        <td>{{ genotype.chrom }}</td>
+                        <td>{{ genotype.pos }}</td>
+                        <td>{{ genotype.uid|default_if_none:"—" }}</td>
+                        <td>{{ genotype.ref }}</td>
+                        <td>{{ genotype.alt }}</td>
+                        <td>{{ genotype.qual|default_if_none:"—" }}</td>
+                        <td>{{ genotype.filter|default_if_none:"—" }}</td>
+                        <td>{{ genotype.info|default_if_none:"—" }}</td>
+                        <td>{{ genotype.gt|default_if_none:"—" }}</td>
+                        <td>{{ genotype.phase_set|default_if_none:"—" }}</td>
+                        <td>{{ genotype.depth|default_if_none:"—" }}</td>
+                        <td>{{ genotype.allel_depth_all|default_if_none:"—" }}</td>
+                        <td>{{ genotype.allel_depth_nofilt|default_if_none:"—" }}</td>
+                        <td>{{ genotype.genotype_quality|default_if_none:"—" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="14">Nothing found</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %} 
     </body>
 </html>
