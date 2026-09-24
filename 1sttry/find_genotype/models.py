@@ -19,6 +19,9 @@ class Genotype(models.Model):
     class Meta:
         constraints = [models.UniqueConstraint(fields=["coordinate", "sample"], name="unique_genotype")]
         
+    def __str__(self):
+        return f"{self.sample} {self.coordinate}"
+        
         
 class Coordinate(models.Model):
     chromosome = models.ForeignKey(
@@ -36,20 +39,32 @@ class Coordinate(models.Model):
     class Meta:
         constraints = [models.UniqueConstraint(fields=["chromosome", "pos", "ref", "alt"], name="unique_variant")]
 
+    def __str__(self):
+        return f"{self.chromosome}:{self.pos} {self.ref}>{self.alt}"
+
 class Chromosome(models.Model):
     assembly = models.ForeignKey(
         "Assembly",
         on_delete=models.PROTECT,
     )
     chrom = models.TextField()
-    length = models.IntegerField()
-    
+    length = models.IntegerField(null=True)
+
     class Meta:
         constraints = [models.UniqueConstraint(fields=["assembly", "chrom"], name="unique_chrom")]
-
+    def __str__(self):
+        return self.chrom
+    
+    
 class Assembly(models.Model):
     assembly_uid = models.TextField(unique=True)
+    
+    def __str__(self):
+        return self.assembly_uid
 
 class Sample(models.Model):
     sample_uid = models.TextField(unique=True)
     file_name = models.TextField()
+    
+    def __str__(self):
+        return self.sample_uid
