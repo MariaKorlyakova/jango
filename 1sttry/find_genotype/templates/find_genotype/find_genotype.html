@@ -20,54 +20,68 @@
             {{ form }}
             <button type="submit">Search</button>
         </form>
-        {% if genotypes is not None %}
-        <div class="wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th> Sample </th>
-                        <th> Chromosome </th>
-                        <th> Position </th>
-                        <th> REF </th>
-                        <th> ALT </th>
-                        <th> Genotype </th>
-                        <th> Depth </th>
-                        <th> Quality (GQ) </th>
-                        <th> Details </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for genotype in genotypes %}
+        {% if page is not None %}
+            <div class="wrap">
+                <table>
+                    <thead>
                         <tr>
-                            <td>{{ genotype.sample.sample_uid }}</td>
-                            <td>{{ genotype.coordinate.chromosome.chrom }}</td>
-                            <td>{{ genotype.coordinate.pos }}</td>
-                            <td>{{ genotype.coordinate.ref }}</td>
-                            <td>{{ genotype.coordinate.alt }}</td>
-                            <td>{{ genotype.gt|default_if_none:"—" }}</td>
-                            <td>{{ genotype.depth|default_if_none:"—" }}</td>
-                            <td>{{ genotype.genotype_quality|default_if_none:"—" }}</td>
-                            <td>
-                                <details>
-                                    <summary>Read more</summary>
-                                    ID: {{ genotype.coordinate.uid|default_if_none:"—" }}<br>
-                                    QUAL: {{ genotype.coordinate.qual|default_if_none:"—" }}<br>
-                                    FILTER: {{ genotype.coordinate.filter|default_if_none:"—" }}<br>
-                                    PS: {{ genotype.phase_set|default_if_none:"—" }}<br>
-                                    ADALL: {{ genotype.allel_depth_all|default_if_none:"—" }}<br>
-                                    AD: {{ genotype.allel_depth_nofilt|default_if_none:"—" }}<br>
-                                    INFO: {{ genotype.coordinate.info|default_if_none:"—" }}
-                                </details>
-                            </td>
+                            <th> Sample </th>
+                            <th> Chromosome </th>
+                            <th> Position </th>
+                            <th> REF </th>
+                            <th> ALT </th>
+                            <th> Genotype </th>
+                            <th> Depth </th>
+                            <th> Quality (GQ) </th>
+                            <th> Details </th>
                         </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="9">Nothing found</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {% for genotype in page %}
+                            <tr>
+                                <td>{{ genotype.sample.sample_uid }}</td>
+                                <td>{{ genotype.coordinate.chromosome.chrom }}</td>
+                                <td>{{ genotype.coordinate.pos }}</td>
+                                <td>{{ genotype.coordinate.ref }}</td>
+                                <td>{{ genotype.coordinate.alt }}</td>
+                                <td>{{ genotype.gt|default_if_none:"—" }}</td>
+                                <td>{{ genotype.depth|default_if_none:"—" }}</td>
+                                <td>{{ genotype.genotype_quality|default_if_none:"—" }}</td>
+                                <td>
+                                    <details>
+                                        <summary>Read more</summary>
+                                        ID: {{ genotype.coordinate.uid|default_if_none:"—" }}<br>
+                                        QUAL: {{ genotype.coordinate.qual|default_if_none:"—" }}<br>
+                                        FILTER: {{ genotype.coordinate.filter|default_if_none:"—" }}<br>
+                                        PS: {{ genotype.phase_set|default_if_none:"—" }}<br>
+                                        ADALL: {{ genotype.allel_depth_all|default_if_none:"—" }}<br>
+                                        AD: {{ genotype.allel_depth_nofilt|default_if_none:"—" }}<br>
+                                        INFO: {{ genotype.coordinate.info|default_if_none:"—" }}
+                                    </details>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9">Nothing found</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if page.paginator.num_pages > 1 %}
+                    <p>
+                        {% if page.has_previous %}
+                            <a href="{% querystring page=page.previous_page_number %}">Previous</a>
+                        {% endif %}
+
+                        Page {{ page.number }} of {{ page.paginator.num_pages }},
+                        found {{ page.paginator.count }} page
+
+                        {% if page.has_next %}
+                            <a href="{% querystring page=page.next_page_number %}">Next</a>
+                        {% endif %}
+                    </p>
+                {% endif %}
+            </div>
         {% endif %} 
     </body>
 </html>
